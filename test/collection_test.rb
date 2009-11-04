@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/test_helper'
-require File.dirname(__FILE__)+'/../lib/pagination/collection'
-require File.dirname(__FILE__)+'/../lib/pagination/enumerable'
+require File.dirname(__FILE__) + '/../lib/pagination/collection'
+require File.dirname(__FILE__) + '/../lib/pagination/enumerable'
 
 class CollectionTest < Test::Unit::TestCase
   context "collection test" do
@@ -50,6 +50,7 @@ class CollectionTest < Test::Unit::TestCase
 
       should "rise an error InvalidPage" do
         assert_raise(Pagination::InvalidPage) { paginate_collection(@user.articles, -2, 2) }
+        assert_raise(Pagination::InvalidPage) { paginate_collection(@user.articles, 1000, 2) }
       end
 
       should "rise an error ArgumentError" do
