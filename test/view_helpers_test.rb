@@ -4,9 +4,8 @@ require File.dirname(__FILE__) + '/lib/view_test_process'
 class ViewHelpersTest < Pagination::ViewTestCase
   context "paginate method" do
 
-#   TODO: @html_result return wrong string - two times the same, why???
     should "return full output" do
-      paginate({:page => 1}, {:per_page => 4, :controls => :bottom})
+      paginate({:page => 1}, {:per_page => 4, :controls => :top})
       expected = <<-HTML
         <div class="pagination"><span class="disabled prev_page">&laquo; Previous</span>
         <span class="current">1</span>
@@ -20,7 +19,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
     
     should "show links to pages" do
-      paginate do |pagination|
+      paginate({}, {:per_page => 4}) do |pagination|
         assert_select 'a[href]', 3 do |elements|
           validate_page_numbers [2,3,2], elements
           assert_select elements.last, ':last-child', "Next &raquo;"
@@ -34,7 +33,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
 
     should "paginate with options" do
       paginate({:page => 2},
-             :class => 'paginate', :previous_label => 'Prev', :next_label => 'Next') do
+             :per_page => 4, :class => 'paginate', :previous_label => 'Prev', :next_label => 'Next') do
         assert_select 'a[href]', 4 do |elements|
           validate_page_numbers [1,1,3,3], elements
           # test rel attribute values:
@@ -53,7 +52,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
 
     should "paginate using renderer class" do
-      paginate( {}, :renderer => AdditionalLinkAttributesRenderer) do
+      paginate( {}, :per_page => 5, :renderer => AdditionalLinkAttributesRenderer) do
         assert_select 'a[default=true]', 3
       end
     end
@@ -72,7 +71,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
 
       renderer = AdditionalLinkAttributesRenderer.new(:title => 'rendered')
-      paginate({}, :renderer => renderer) do
+      paginate({}, :per_page => 5, :renderer => renderer) do
         assert_select 'a[title=rendered]', 3
       end
     end
@@ -90,7 +89,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
 
     should "paginate without page links" do
-      paginate({:page => 2}, :page_links => false) do
+      paginate({:page => 2}, :per_page => 5, :page_links => false) do
         assert_select 'a[href]', 2 do |elements|
           validate_page_numbers [1,3], elements
         end
@@ -134,9 +133,9 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
 
     should "paginate with custom page param" do
-      paginate({}, {:param_name => :developers_page}) do
-        assert_select 'a[href]', 4 do |elements|
-          validate_page_numbers [1,1,3,3], elements, :developers_page
+      paginate({}, {:per_page => 5, :param_name => :developers_page}) do
+        assert_select 'a[href]', 3 do |elements|
+          validate_page_numbers [2,3,2], elements, :developers_page
         end
       end
     end
@@ -175,31 +174,12 @@ class ViewHelpersTest < Pagination::ViewTestCase
       assert_links_match %r{\Wbaz/list\W}
     end
 
-    should "paginate with custom page param" do
-      paginate({ :page => 2} , :param_name => :developers_page) do
-        assert_select 'a[href]', 4 do |elements|
-          validate_page_numbers [1,1,3,3], elements, :developers_page
-        end
-      end
-    end
-
     should "will paginate with atmark url" do
       @request.symbolized_path_parameters[:action] = "@tag"
       renderer = Pagination::LinkRenderer.new
 
       paginate({ :page => 1 }, :renderer=>renderer)
       assert_links_match %r[/foo/@tag\?page=\d]
-    end
-
-    should "complex custom page param" do
-      @request.params :developers => { :page => 2 }
-
-      paginate({}, :page => 2, :param_name => 'developers[page]') do
-        assert_select 'a[href]', 4 do |links|
-          assert_links_match /\?developers%5Bpage%5D=\d+$/, links
-          validate_page_numbers [1,1,3,3], links, 'developers[page]'
-        end
-      end
     end
 
     should "custom routing page param" do

@@ -65,6 +65,12 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
       end
 
       @html_document = HTML::Document.new(@html_result, true, false)
+
+      if block_given?
+        classname = options[:class] || Pagination::ViewHelpers.pagination_options[:class]
+        assert_select("div.#{classname}", 1, 'no main DIV', &block)
+      end
+
     end
 
     def response_from_page_or_rjs

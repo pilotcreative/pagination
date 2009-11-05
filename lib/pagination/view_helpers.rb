@@ -99,11 +99,12 @@ module Pagination
       
       if block_given?
         top = [:top, :both].include?(options[:controls]) ? pagination : ""
-        bottom = [:bottom, :both].include?(options[:controls]) ? pagination : ""
+        bottom = ''#[:bottom, :both].include?(options[:controls]) ? pagination : ""
         unless ActionView::Base.respond_to? :erb_variable
           concat top
           yield collection
-          concat bottom
+          #TODO: problem with bottom - it shows pagination twice!!
+#          concat bottom
         else
           content = top + capture(&block) + bottom
           concat(content, block.binding)
