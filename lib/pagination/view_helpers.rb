@@ -99,7 +99,7 @@ module Pagination
       
       if block_given?
         top = [:top, :both].include?(options[:controls]) ? pagination : ""
-        bottom = ''#[:bottom, :both].include?(options[:controls]) ? pagination : ""
+        bottom = [:bottom, :both].include?(options[:controls]) ? pagination : ""
         unless ActionView::Base.respond_to? :erb_variable
           concat top
           yield collection
