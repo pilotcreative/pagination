@@ -28,7 +28,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
     @controller  = DummyController.new
     @request     = @controller.request
     @html_result = nil
-    @template    = '<%= paginate collection, options do |tmp|; end %>'
+    @template    = '<%= paginate collection, options do |tmp|; tmp.each do |t|; t.to_s; end; end %>'
 
     @view = ActionView::Base.new
     @view.assigns['controller'] = @controller
@@ -44,7 +44,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
 
       if collection.instance_of? Hash
         @request.params :page => collection[:page] || 1
-        collection = [1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17]
+        collection = [1,2,3,4,5,6,7,8,9,10,11]
       end      
 
       locals = { :collection => collection, :options => options}
@@ -63,7 +63,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
 
         @html_result = @view.render_template(*args)
       end
-      
+
       @html_document = HTML::Document.new(@html_result, true, false)
     end
 

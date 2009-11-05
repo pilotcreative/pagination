@@ -4,20 +4,20 @@ require File.dirname(__FILE__) + '/lib/view_test_process'
 class ViewHelpersTest < Pagination::ViewTestCase
   context "paginate method" do
 
-    # TODO: @html_result return wrong string - two times the same, why???
-#    should "test_full_output" do
-#      paginate({:page => 1}, {:per_page => 4, :controls => :bottom})
-#      expected = <<-HTML
-#        <div class="pagination"><span class="disabled prev_page">&laquo; Previous</span>
-#        <span class="current">1</span>
-#        <a href="/foo/bar?page=2" rel="next">2</a>
-#        <a href="/foo/bar?page=3">3</a>
-#        <a href="/foo/bar?page=2" class="next_page" rel="next">Next &raquo;</a></div>
-#      HTML
-#      expected.strip!.gsub!(/\s{2,}/, ' ')
-#
-#      assert_dom_equal expected, @html_result
-#    end
+#   TODO: @html_result return wrong string - two times the same, why???
+    should "return full output" do
+      paginate({:page => 1}, {:per_page => 4, :controls => :bottom})
+      expected = <<-HTML
+        <div class="pagination"><span class="disabled prev_page">&laquo; Previous</span>
+        <span class="current">1</span>
+        <a href="/foo/bar?page=2" rel="next">2</a>
+        <a href="/foo/bar?page=3">3</a>
+        <a href="/foo/bar?page=2" class="next_page" rel="next">Next &raquo;</a></div>1234
+      HTML
+      expected.strip!.gsub!(/\s{2,}/, ' ')
+
+      assert_dom_equal expected, @html_result
+    end
     
     should "show links to pages" do
       paginate do |pagination|
@@ -58,11 +58,10 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
     end
 
-    # TODO: @html_result return wrong string - sholudnt return empty string, why???
-#    should "no pagination when page count is one" do
-#      paginate({:page => 1}, {:per_page => 30})
-#      assert_equal '', @html_result
-#    end
+    should "no pagination when page count is one" do
+      paginate({:page => 1}, {:per_page => 30})
+      assert_equal '', @html_result
+    end
 
     should "paginate using renderer instance" do
       renderer = Pagination::LinkRenderer.new
@@ -142,41 +141,41 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
     end
 
-    should "test_will_paginate_preserves_parameters_on_get" do
+    should "paginate preserves parameters on get" do
       @request.params :foo => { :bar => 'baz' }
       paginate
       assert_links_match /foo%5Bbar%5D=baz/
     end
 
-    should "test_will_paginate_doesnt_preserve_parameters_on_post" do
+    should "paginate doesnt preserve parameters on post" do
       @request.post
       @request.params :foo => 'bar'
       paginate
       assert_no_links_match /foo=bar/
     end
 
-    should "test_adding_additional_parameters" do
+    should "adding additional parameters" do
       paginate({}, :params => { :foo => 'bar' })
       assert_links_match /foo=bar/
     end
 
-    should "test_adding_anchor_parameter" do
+    should "adding anchor parameter" do
       paginate({}, :params => { :anchor => 'anchor' })
       assert_links_match /#anchor$/
     end
 
-    should "test_removing_arbitrary_parameters" do
+    should "removing arbitrary parameters" do
       @request.params :foo => 'bar'
       paginate({}, :params => { :foo => nil })
       assert_no_links_match /foo=bar/
     end
 
-    should "test_adding_additional_route_parameters" do
+    should "adding additional route parameters" do
       paginate({}, :params => { :controller => 'baz', :action => 'list' })
       assert_links_match %r{\Wbaz/list\W}
     end
 
-    should "test_will_paginate_with_custom_page_param" do
+    should "paginate with custom page param" do
       paginate({ :page => 2} , :param_name => :developers_page) do
         assert_select 'a[href]', 4 do |elements|
           validate_page_numbers [1,1,3,3], elements, :developers_page
@@ -184,7 +183,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
     end
 
-    should "test_will_paginate_with_atmark_url" do
+    should "will paginate with atmark url" do
       @request.symbolized_path_parameters[:action] = "@tag"
       renderer = Pagination::LinkRenderer.new
 
@@ -192,7 +191,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
       assert_links_match %r[/foo/@tag\?page=\d]
     end
 
-    should "test_complex_custom_page_param" do
+    should "complex custom page param" do
       @request.params :developers => { :page => 2 }
 
       paginate({}, :page => 2, :param_name => 'developers[page]') do
@@ -203,7 +202,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
     end
 
-    should "test_custom_routing_page_param" do
+    should "custom routing page param" do
       @request.symbolized_path_parameters.update :controller => 'dummy', :action => nil
       paginate({}, :per_page => 2) do
         assert_select 'a[href]', 6 do |links|
@@ -212,7 +211,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
     end
 
-    should "test_custom_routing_page_param_with_dot_separator" do
+    should "custom routing page param with dot separator" do
       @request.symbolized_path_parameters.update :controller => 'dummy', :action => 'dots'
       paginate({}, :per_page => 2) do
         assert_select 'a[href]', 6 do |links|
@@ -221,7 +220,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
       end
     end
 
-    should "test_custom_routing_with_first_page_hidden" do
+    should "custom routing with first page hidden" do
       @request.symbolized_path_parameters.update :controller => 'ibocorp', :action => nil
       paginate({:page => 2}, :per_page => 2) do
         assert_select 'a[href]', 7 do |links|
