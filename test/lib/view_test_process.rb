@@ -33,7 +33,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
     @view = ActionView::Base.new
     @view.assigns['controller'] = @controller
     @view.assigns['_request']   = @request
-    @view.assigns['_params']    = @request.params
+    @view.assigns['_params']  = @request.params
   end
 
   def default_test; end
@@ -41,11 +41,12 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
   protected
 
     def paginate(collection = {}, options = {}, &block)
+
       if collection.instance_of? Hash
-        page_options = { :offset => 2, :limit => 2 }.merge(collection)
-        collection =  [1].paginate(page_options)
-      end
-      
+        @request.params :page => collection[:page] || 1
+        collection = [1,2,3,4,5,6,7,8,9,10,11,13,14,15,16,17]
+      end      
+
       locals = { :collection => collection, :options => options}
 
       unless @view.respond_to? :render_template
@@ -112,7 +113,7 @@ class DummyRequest
   def initialize
     @get = true
     @params = {}
-    @symbolized_path_parameters = { :controller => 'foo', :action => 'bar' }
+    @symbolized_path_parameters = { :controller => 'foo', :action => 'bar'}
   end
 
   def get?

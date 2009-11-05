@@ -26,14 +26,8 @@ class CollectionTest < Test::Unit::TestCase
   
     context "init pagination collection" do
       setup do
-        @user = User.new :first_name => 'Bob', :last_name => 'Builder'
-        @user.save!
-        5.times{ |i|
-          article = Article.new :title => "title_#{i}", :user => @user
-          article.save!
-        }
-
-        @paginated_collection = paginate_collection(@user.articles)
+        @collection = [1,2,3,4,5]
+        @paginated_collection = paginate_collection(@collection)
       end
 
       should "return total pages" do
@@ -48,13 +42,19 @@ class CollectionTest < Test::Unit::TestCase
         assert_equal 3, @paginated_collection.next_page
       end
 
+      should "array be shorter after paginate" do
+        pag_array = paginate_collection(@collection, 1, 4)
+        assert_not_equal  @collection, pag_array.count
+        assert_equal 4, pag_array.count
+      end
+
       should "rise an error InvalidPage" do
-        assert_raise(Pagination::InvalidPage) { paginate_collection(@user.articles, -2, 2) }
-        assert_raise(Pagination::InvalidPage) { paginate_collection(@user.articles, 1000, 2) }
+        assert_raise(Pagination::InvalidPage) { paginate_collection(@collection, -2, 2) }
+        assert_raise(Pagination::InvalidPage) { paginate_collection(@collection, 1000, 2) }
       end
 
       should "rise an error ArgumentError" do
-        assert_raise(ArgumentError) { paginate_collection(@user.articles, 2, -2) }
+        assert_raise(ArgumentError) { paginate_collection(@collection, 2, -2) }
       end
     end
   end
