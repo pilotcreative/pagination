@@ -1,32 +1,31 @@
 Display options:
- * <tt>:previous_label</tt> -- default: "« Previous" (this parameter is called <tt>:prev_label</tt> in versions <b>2.3.2</b> and older!)
- * <tt>:next_label</tt> -- default: "Next »"
- * <tt>:page_links</tt> -- when false, only previous/next links are rendered (default: true)
- * <tt>:inner_window</tt> -- how many links are shown around the current page (default: 4)
- * <tt>:outer_window</tt> -- how many links are around the first and the last page (default: 1)
- * <tt>:separator</tt> -- string separator for page HTML elements (default: single space)
- * <tt>:controls</tt> -- display controls only at the <tt>:top</tt> or <tt>:bottom</tt> of the pagination block (default: <tt>:both</tt>)
- * <tt>:per_page</tt> -- number of items displayed per page (default: 10)
+ :previous_label -- default: "« Previous" (this parameter is called :prev_label in versions 2.3.2 and older!)
+ :next_label -- default: "Next »"
+ :page_links -- when false, only previous/next links are rendered (default: true)
+ :inner_window -- how many links are shown around the current page (default: 4)
+ :outer_window -- how many links are around the first and the last page (default: 1)
+ :separator -- string separator for page HTML elements (default: single space)
+ :controls -- display controls only at the :top or :bottom of the pagination block (default: :both)
+ :per_page -- number of items displayed per page (default: 10)
 
 HTML options:
- * <tt>:class</tt> -- CSS class name for the generated DIV (default: "pagination")
- * <tt>:container</tt> -- toggles rendering of the DIV container for pagination links, set to false only when you are rendering your own pagination markup (default: true)
- * <tt>:id</tt> -- HTML ID for the container (default: nil). Pass +true+ to have the ID automatically generated from the class name of objects in collection: for example, paginating
+ :class -- CSS class name for the generated DIV (default: "pagination")
+ :container -- toggles rendering of the DIV container for pagination links, set to false only when you are rendering your own pagination markup (default: true)
+ :id -- HTML ID for the container (default: nil). Pass +true+ to have the ID automatically generated from the class name of objects in collection: for example, paginating
  ArticleComment models would yield an ID of "article_comments_pagination".
 
 Advanced options:
- * <tt>:param_name</tt> -- parameter name for page number in URLs (default: <tt>:page</tt>)
- * <tt>:params</tt> -- additional parameters when generating pagination links
- (eg. <tt>:controller => "foo", :action => nil</tt>)
- * <tt>:renderer</tt> -- class name, class or instance of a link renderer (default:
- <tt>Pagination::LinkRenderer</tt>)
+ :param_name -- parameter name for page number in URLs (default: :page)
+ :params -- additional parameters when generating pagination links
+ (eg. :controller => "foo", :action => nil)
+ :renderer -- class name, class or instance of a link renderer (default: Pagination::LinkRenderer)
 
 
 All options not recognized by paginate will become HTML attributes on the container
 element for pagination links (the DIV). For example:
 
 <% paginate @posts, :style => 'font-size: small' do |posts| %>
-    ...
+...
 <% end %>
 
 ... will result in:
