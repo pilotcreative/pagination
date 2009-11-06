@@ -5,13 +5,13 @@ class ViewHelpersTest < Pagination::ViewTestCase
   context "paginate method" do
 
     should "return full output" do
-      paginate({:page => 1}, {:per_page => 4, :controls => :top})
+      paginate({:page => 1})
       expected = <<-HTML
         <div class="pagination"><span class="disabled prev_page">&laquo; Previous</span>
         <span class="current">1</span>
         <a href="/foo/bar?page=2" rel="next">2</a>
         <a href="/foo/bar?page=3">3</a>
-        <a href="/foo/bar?page=2" class="next_page" rel="next">Next &raquo;</a></div>1234
+        <a href="/foo/bar?page=2" class="next_page" rel="next">Next &raquo;</a></div>
       HTML
       expected.strip!.gsub!(/\s{2,}/, ' ')
 
@@ -19,7 +19,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
     
     should "show links to pages" do
-      paginate({}, {:per_page => 4}) do |pagination|
+      paginate do |pagination|
         assert_select 'a[href]', 3 do |elements|
           validate_page_numbers [2,3,2], elements
           assert_select elements.last, ':last-child', "Next &raquo;"
@@ -33,7 +33,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
 
     should "paginate with options" do
       paginate({:page => 2},
-             :per_page => 4, :class => 'paginate', :previous_label => 'Prev', :next_label => 'Next') do
+             :class => 'paginate', :previous_label => 'Prev', :next_label => 'Next') do
         assert_select 'a[href]', 4 do |elements|
           validate_page_numbers [1,1,3,3], elements
           # test rel attribute values:
@@ -89,7 +89,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
 
     should "paginate without page links" do
-      paginate({:page => 2}, :per_page => 5, :page_links => false) do
+      paginate({:page => 2}, :page_links => false) do
         assert_select 'a[href]', 2 do |elements|
           validate_page_numbers [1,3], elements
         end
@@ -133,7 +133,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
     end
 
     should "paginate with custom page param" do
-      paginate({}, {:per_page => 5, :param_name => :developers_page}) do
+      paginate({}, {:param_name => :developers_page}) do
         assert_select 'a[href]', 3 do |elements|
           validate_page_numbers [2,3,2], elements, :developers_page
         end

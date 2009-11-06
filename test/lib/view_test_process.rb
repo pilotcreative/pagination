@@ -28,7 +28,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
     @controller  = DummyController.new
     @request     = @controller.request
     @html_result = nil
-    @template    = '<%= paginate collection, options do |tmp|; tmp.each do |t|; t.to_s; end; end %>'
+    @template    = '<%= paginate collection, options do |tmp|; tmp.each do |t|; end; end %>'
 
     @view = ActionView::Base.new
     @view.assigns['controller'] = @controller
@@ -46,8 +46,9 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
         @request.params :page => collection[:page] || 1
         collection = [1,2,3,4,5,6,7,8,9,10,11]
       end      
+      options = {:per_page => 4, :controls => :top}.merge(options)
 
-      locals = { :collection => collection, :options => options}
+      locals = { :collection => collection, :options => options }
 
       unless @view.respond_to? :render_template
         # Rails 2.2
@@ -68,7 +69,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
 
       if block_given?
         classname = options[:class] || Pagination::ViewHelpers.pagination_options[:class]
-        assert_select("div.#{classname}", 1, 'no main DIV', &block)
+        assert_select("div.#{classname}",1 , 'no main DIV', &block)
       end
 
     end

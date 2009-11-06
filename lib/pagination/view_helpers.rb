@@ -82,7 +82,7 @@ module Pagination
       
       collection = Pagination::Collection.new(options.merge(:collection => collection, :current_page => params[options[:param_name]]|| 1))
       yield collection and return nil unless collection.total_pages > 1
-      
+
       # get the renderer instance
       renderer = case options[:renderer]
       when String
@@ -96,15 +96,16 @@ module Pagination
       # render HTML for pagination
       renderer.prepare collection, options, self
       pagination = renderer.to_html.to_s
-      
+
       if block_given?
         top = [:top, :both].include?(options[:controls]) ? pagination : ""
         bottom = [:bottom, :both].include?(options[:controls]) ? pagination : ""
         unless ActionView::Base.respond_to? :erb_variable
           concat top
           yield collection
-          #TODO: problem with bottom - it shows pagination twice!!
-#          concat bottom
+          unless bottom.empty?
+            concat bottom
+          end
         else
           content = top + capture(&block) + bottom
           concat(content, block.binding)

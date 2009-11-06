@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'activerecord'
 require 'shoulda'
-require 'matchy'
 require 'logger'
 
 ActiveRecord::Base.configurations = {'sqlite3' => {:adapter => 'sqlite3', :database => ':memory:'}}
