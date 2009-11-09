@@ -29,12 +29,12 @@ class ActiveRecordExtentionsTest < Test::Unit::TestCase
     end
 
     should "difference between Article.find_every_with_scope and Article.find_every_without_scope" do
-      users1 = User.all.find_every_with_scope({})
-      users2 = User.all.find_every_without_scope({})
+      users1 = User.all
+      users2 = User.all(:eager => true)
       assert_equal users1, users2
 
-      users1 = User.all(:conditions => {:first_name => 'Bob'}).find_every_without_scope(:conditions => {:last_name => 'Builder2'})
-      users2 = User.all(:conditions => {:first_name => 'Bob'}).find_every_with_scope(:conditions => {:last_name => 'Builder2'})
+      users1 = User.all(:conditions => {:first_name => 'Bob'})
+      users2 = User.all(:eager => true, :conditions => {:first_name => 'Bob'})
       assert_equal users1, users2
     end
 
