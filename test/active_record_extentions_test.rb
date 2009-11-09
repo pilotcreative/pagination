@@ -32,10 +32,12 @@ class ActiveRecordExtentionsTest < Test::Unit::TestCase
       users1 = User.all
       users2 = User.all(:eager => true)
       assert_equal users1, users2
+      assert_not_equal users1.class, users2.class
 
       users1 = User.all(:conditions => {:first_name => 'Bob'})
       users2 = User.all(:eager => true, :conditions => {:first_name => 'Bob'})
       assert_equal users1, users2
+      assert_not_equal users1.class, users2.class
     end
 
     should "all returns class ActiveRecord::NamedScope::Scope" do
