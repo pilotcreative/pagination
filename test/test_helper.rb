@@ -3,6 +3,7 @@ require 'activerecord'
 require 'shoulda'
 require 'logger'
 
+
 ActiveRecord::Base.configurations = {'sqlite3' => {:adapter => 'sqlite3', :database => ':memory:'}}
 ActiveRecord::Base.establish_connection('sqlite3')
 
@@ -24,6 +25,10 @@ end
 class User < ActiveRecord::Base
   has_many :articles
   named_scope :bob, :conditions => {:first_name => 'Bob'}
+
+  def find_all
+    User.find_all
+  end
 end
 
 class Article < ActiveRecord::Base
