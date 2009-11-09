@@ -10,43 +10,35 @@ class ActiveRecordExtentionsTest < Test::Unit::TestCase
       User.delete_all
       Article.delete_all
       
-      @user = User.create :first_name => 'Bob', :last_name => 'Builder'
+      @user1 = User.create :first_name => 'Bob', :last_name => 'Builder'
       @user2 = User.create :first_name => 'Bob', :last_name => 'Builder2'
       @user3 = User.create :first_name => 'Tom', :last_name => 'Builder'
-      5.times{ |i|
-        article = Article.new :title => "title_#{i}", :user => @user
-        article.save!
-      }
       
-      3.times{ |i|
-        article = Article.new :title => "2title_#{i}", :user => @user2
-        article.save!
-      }
+      5.times do |i|
+        Article.create(:title => "title_#{i}", :user => @user1)
+      end
+      
+      3.times do |i|
+        Article.create!(:title => "2title_#{i}", :user => @user2)
+      end
     end
 
-    should "call find_every when call all" do
-      Article.expects(:find_every).returns(Article.all)
+    should "return the same results with find_every_with_scope and find_every_without_scope" do
+      assert_equal User.send(:find_every_with_scope, {}),
+                   User.send(:find_every_without_scope, {})
+
+      assert_equal User.send(:find_every_with_scope, :conditions => {:first_name => "Bob"}),
+                   User.send(:find_every_without_scope, :conditions => {:first_name => "Bob"})
     end
 
-    should "difference between Article.find_every_with_scope and Article.find_every_without_scope" do
-      users1 = User.all
-      users2 = User.all(:eager => true)
-      assert_equal users1, users2
-
-      users1 = User.all(:conditions => {:first_name => 'Bob'})
-      users2 = User.all(:eager => true, :conditions => {:first_name => 'Bob'})
-      assert_equal users1, users2
-    end
-
-    should "all returns class ActiveRecord::NamedScope::Scope" do
+    should "return ActiveRecord::NamedScope::Scope" do
       assert_equal ActiveRecord::NamedScope::Scope, User.all.class
       assert_equal ActiveRecord::NamedScope::Scope, User.all(:conditions => {:first_name => 'Bob'}).class
     end
 
-    should "all with eager returns Array" do
+    should "return an Array when called with :eager => true" do
       assert_equal Array, Article.all(:eager => true).class
-      assert_equal Array, Article.all(:eager => true, :conditions => {:user_id => @user.id}).class
+      assert_equal Array, Article.all(:eager => true, :conditions => {:title => "title_1"}).class
     end
-    
   end
 end
