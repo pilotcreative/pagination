@@ -1,6 +1,7 @@
 require File.dirname(__FILE__) + '/test_helper'
 require 'active_record/base_extensions'
 require 'active_record/scope_extensions'
+require 'mocha'
 
 
 class ActiveRecordExtentionsTest < Test::Unit::TestCase
@@ -23,31 +24,29 @@ class ActiveRecordExtentionsTest < Test::Unit::TestCase
       }
     end
 
-    should "return users from scope where first_name is Bob" do
-      users = User.all(:conditions => {:first_name => 'Bob'})
-      assert_equal [@user,@user2], users
-      assert_equal users, User.find_every_with_scope(:conditions => {:first_name => 'Bob'})
+    should "call find_every when call all" do
+      Article.expects(:find_every).returns(Article.all)
     end
 
-    should "lazy loading" do
-      articles = Article.all(:select => "title")
-      assert_nil articles[1].user
+    should "difference between Article.find_every_with_scope and Article.find_every_without_scope" do
+      users1 = User.all.find_every_with_scope({})
+      users2 = User.all.find_every_without_scope({})
+      assert_equal users1, users2
+
+      users1 = User.all(:conditions => {:first_name => 'Bob'}).find_every_without_scope(:conditions => {:last_name => 'Builder2'})
+      users2 = User.all(:conditions => {:first_name => 'Bob'}).find_every_with_scope(:conditions => {:last_name => 'Builder2'})
+      assert_equal users1, users2
     end
 
-    should "run lazy loading for name scope" do
-      bobs = User.bob.all(:eager => true, :conditions => {:last_name => 'Builder2'})
-      assert_equal 3, bobs.first.articles.count
+    should "all returns class ActiveRecord::NamedScope::Scope" do
+      assert_equal ActiveRecord::NamedScope::Scope, User.all.class
+      assert_equal ActiveRecord::NamedScope::Scope, User.all(:conditions => {:first_name => 'Bob'}).class
     end
 
-    should "return all users" do
-      User.expects(:all).returns(User.find_every_with_scope({}))
-      assert_equal 3, User.all.count
+    should "all with eager returns Array" do
+      assert_equal Array, Article.all(:eager => true).class
+      assert_equal Array, Article.all(:eager => true, :conditions => {:user_id => @user.id}).class
     end
-
-    should "respond to active record extentions" do
-      assert User.respond_to?(:find_every_with_scope)
-      assert Article.respond_to?(:find_initial_with_eager_loading)
-    end
-
+    
   end
 end
