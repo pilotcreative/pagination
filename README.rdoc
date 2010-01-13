@@ -16,8 +16,7 @@ HTML options:
 
 Advanced options:
  :param_name -- parameter name for page number in URLs (default: :page)
- :params -- additional parameters when generating pagination links
- (eg. :controller => "foo", :action => nil)
+ :params -- additional parameters when generating pagination links (eg. :controller => "foo", :action => nil)
  :renderer -- class name, class or instance of a link renderer (default: Pagination::LinkRenderer)
 
 
