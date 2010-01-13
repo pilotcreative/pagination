@@ -23,12 +23,16 @@ class ActiveRecordExtentionsTest < Test::Unit::TestCase
       end
     end
 
-    should "return the same results with find_every_with_scope and find_every_without_scope" do
-      assert_equal User.send(:find_every_with_scope, {}),
-                   User.send(:find_every_without_scope, {})
+    should "difference between Article.find_every_with_scope and Article.find_every_without_scope" do
+      users1 = User.all
+      users2 = User.all(:eager => true)
+      assert_equal users1, users2
+      assert_not_equal users1.class, users2.class
 
-      assert_equal User.send(:find_every_with_scope, :conditions => {:first_name => "Bob"}),
-                   User.send(:find_every_without_scope, :conditions => {:first_name => "Bob"})
+      users1 = User.all(:conditions => {:first_name => 'Bob'})
+      users2 = User.all(:eager => true, :conditions => {:first_name => 'Bob'})
+      assert_equal users1, users2
+      assert_not_equal users1.class, users2.class
     end
 
     should "return ActiveRecord::NamedScope::Scope" do
