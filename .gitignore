@@ -1,0 +1,4 @@
+*.gemspec
+*.log
+*.gem
+pkg/
