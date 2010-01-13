@@ -21,7 +21,8 @@ Advanced options:
 
 
 All options not recognized by paginate will become HTML attributes on the container
-element for pagination links (the DIV). For example:
+element for pagination links (the DIV).
+For example:
 
 <% paginate @posts, :style => 'font-size: small' do |posts| %>
 ...
