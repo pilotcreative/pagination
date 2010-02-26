@@ -17,7 +17,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
 
       assert_dom_equal expected, @html_result
     end
-    
+
     should "show links to pages" do
       paginate do |pagination|
         assert_select 'a[href]', 3 do |elements|

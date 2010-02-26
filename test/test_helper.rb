@@ -1,5 +1,8 @@
 require 'rubygems'
-require 'activerecord'
+gem 'test-unit', '1.2.3'
+require 'test/unit'
+gem 'activerecord', '2.3.5'
+require 'active_record'
 require 'shoulda'
 require 'logger'
 

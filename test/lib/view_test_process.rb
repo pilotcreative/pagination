@@ -1,3 +1,4 @@
+gem 'actionpack', '2.3.5'
 require 'action_controller'
 require 'action_controller/test_process'
 
@@ -37,7 +38,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
   end
 
   def default_test; end
-  
+
   protected
 
     def paginate(collection = {}, options = {}, &block)
@@ -45,7 +46,7 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
       if collection.instance_of? Hash
         @request.params :page => collection[:page] || 1
         collection = [1,2,3,4,5,6,7,8,9,10,11]
-      end      
+      end
       options = {:per_page => 4, :controls => :top}.merge(options)
 
       locals = { :collection => collection, :options => options }

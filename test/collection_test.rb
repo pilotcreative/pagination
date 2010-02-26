@@ -23,7 +23,7 @@ class CollectionTest < Test::Unit::TestCase
         assert_equal expected, @collection.paginate(conditions)
       end
     end
-  
+
     context "init pagination collection" do
       setup do
         @collection = [1,2,3,4,5]
@@ -57,8 +57,28 @@ class CollectionTest < Test::Unit::TestCase
         assert_raise(ArgumentError) { paginate_collection(@collection, 2, -2) }
       end
     end
+
+    context "having already paginated collection" do
+      setup do
+        @collection = (11..20).to_a
+        class << @collection
+          def total_entries; 100; end
+          def current_page; 2; end
+          def per_page; 10; end
+        end
+
+        @paginated_collection = paginate_collection(@collection, 1, 1, 1)
+      end
+
+      should "use attribute values of the original collection" do
+        assert_equal @collection, @paginated_collection
+        assert_equal @collection.total_entries, @paginated_collection.total_entries
+        assert_equal @collection.current_page, @paginated_collection.current_page
+        assert_equal @collection.per_page, @paginated_collection.per_page
+      end
+    end
   end
-  
+
   private
     def paginate_collection(collection, current_page=2, per_page=2, total_entries=nil)
       Pagination::Collection.new(
