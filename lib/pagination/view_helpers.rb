@@ -5,7 +5,7 @@ module Pagination
   # pagination links around (top and bottom) given collection. The helper itself is lightweight
   # and serves only as a wrapper around LinkRenderer instantiation; the
   # renderer then does all the hard work of generating the HTML.
-  # 
+  #
   # == Global options for helpers
   #
   # Options for pagination helpers are optional and get their default values from the
@@ -39,7 +39,7 @@ module Pagination
     # Renders Digg/Flickr-style pagination for a Pagination::Collection
     # object. Nil is returned if there is only one page in total; no point in
     # rendering the pagination in that case...
-    # 
+    #
     # ==== Options
     # Display options:
     # * <tt>:previous_label</tt> -- default: "« Previous" (this parameter is called <tt>:prev_label</tt> in versions <b>2.3.2</b> and older!)
@@ -50,7 +50,7 @@ module Pagination
     # * <tt>:separator</tt> -- string separator for page HTML elements (default: single space)
     # * <tt>:controls</tt> -- display controls only at the <tt>:top</tt> or <tt>:bottom</tt> of the pagination block (default: <tt>:both</tt>)
     # * <tt>:per_page</tt> -- number of items displayed per page (default: 10)
-    # 
+    #
     # HTML options:
     # * <tt>:class</tt> -- CSS class name for the generated DIV (default: "pagination")
     # * <tt>:container</tt> -- toggles rendering of the DIV container for pagination links, set to
@@ -68,7 +68,7 @@ module Pagination
     #
     # All options not recognized by paginate will become HTML attributes on the container
     # element for pagination links (the DIV). For example:
-    # 
+    #
     #   <% paginate @posts, :style => 'font-size: small' do |posts| %>
     #     ...
     #   <% end %>
@@ -79,9 +79,8 @@ module Pagination
     #
     def paginate(collection = [], options = {}, &block)
       options = options.symbolize_keys.reverse_merge Pagination::ViewHelpers.pagination_options
-      
+
       collection = Pagination::Collection.new(options.merge(:collection => collection, :current_page => params[options[:param_name]]|| 1))
-      yield collection and return nil unless collection.total_pages > 1
 
       # get the renderer instance
       renderer = case options[:renderer]
@@ -92,12 +91,14 @@ module Pagination
       else
         options[:renderer]
       end
-      
+
       # render HTML for pagination
       renderer.prepare collection, options, self
       pagination = renderer.to_html.to_s
 
       if block_given?
+        yield collection and return nil unless collection.total_pages > 1
+
         top = [:top, :both].include?(options[:controls]) ? pagination : ""
         bottom = [:bottom, :both].include?(options[:controls]) ? pagination : ""
         unless ActionView::Base.respond_to? :erb_variable
@@ -124,11 +125,11 @@ module Pagination
     #
     #   <span class="gap">&hellip;</span>
     attr_accessor :gap_marker
-    
+
     def initialize
       @gap_marker = '<span class="gap">&hellip;</span>'
     end
-    
+
     # * +collection+ is a Pagination::Collection instance or any other object
     #   that conforms to that API
     # * +options+ are forwarded from +paginate+ view helper
@@ -150,7 +151,7 @@ module Pagination
       # previous/next buttons
       links.unshift page_link_or_span(@collection.previous_page, 'disabled prev_page', @options[:previous_label])
       links.push    page_link_or_span(@collection.next_page,     'disabled next_page', @options[:next_label])
-      
+
       html = links.join(@options[:separator])
       @options[:container] ? @template.content_tag(:div, html, html_attributes) : html
     end
@@ -166,7 +167,7 @@ module Pagination
       end
       @html_attributes
     end
-    
+
   protected
 
     # Collects link items for visible page numbers.
@@ -188,7 +189,7 @@ module Pagination
       inner_window, outer_window = @options[:inner_window].to_i, @options[:outer_window].to_i
       window_from = current_page - inner_window
       window_to = current_page + inner_window
-      
+
       # adjust lower or upper limit if other is out of bounds
       if window_to > total_pages
         window_from -= window_to - total_pages
@@ -199,7 +200,7 @@ module Pagination
         window_from = 1
         window_to = total_pages if window_to > total_pages
       end
-      
+
       visible   = (1..total_pages).to_a
       left_gap  = (2 + outer_window)...window_from
       right_gap = (window_to + 1)...(total_pages - outer_window)
@@ -208,10 +209,10 @@ module Pagination
 
       visible
     end
-    
+
     def page_link_or_span(page, span_class, text = nil)
       text ||= page.to_s
-      
+
       if page and page != current_page
         classnames = span_class && span_class.index(' ') && span_class.split(' ', 2).last
         page_link page, text, :rel => rel_value(page), :class => classnames
@@ -237,10 +238,10 @@ module Pagination
         # page links should preserve GET parameters
         stringified_merge @url_params, @template.params if @template.request.get?
         stringified_merge @url_params, @options[:params] if @options[:params]
-        
+
         if complex = param_name.index(/[^\w-]/)
           page_param = parse_query_parameters("#{param_name}=#{page}")
-          
+
           stringified_merge @url_params, page_param
         else
           @url_params[param_name] = page_one ? 1 : 2
@@ -248,7 +249,7 @@ module Pagination
 
         url = @template.url_for(@url_params)
         return url if page_one
-        
+
         if complex
           @url_string = url.sub(%r!((?:\?|&amp;)#{CGI.escape param_name}=)#{page}!, "\\1\0")
           return url
