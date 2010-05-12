@@ -1,5 +1,5 @@
 module Pagination
-  class InvalidPage < ArgumentError
+  class InvalidPage < ActiveRecord::RecordNotFound
     def initialize(page, max = 1)
       super "#{page} must be greater than 0" if page < 1
       super "#{page} must be less than #{max}" if page >= 1
