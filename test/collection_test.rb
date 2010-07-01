@@ -63,6 +63,17 @@ class CollectionTest < Test::Unit::TestCase
       end
     end
 
+    context "collection is empty" do
+      setup do
+        @collection = []
+        @paginated_collection = paginate_collection(@collection, 1, 1)
+      end
+
+      should "return total entries equal 0" do
+        assert_equal @paginated_collection.total_entries, 0
+      end
+    end
+    
     context "having already paginated collection" do
       setup do
         @collection = (11..20).to_a

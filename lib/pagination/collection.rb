@@ -19,7 +19,7 @@ module Pagination
       else
         @current_page = options[:current_page].to_i
         @per_page = options[:per_page].to_i
-        self.total_entries ||= @collection.count(:distinct => true, :select => :id)
+        self.total_entries ||= @collection.empty? ? 0 : @collection.count(:id , :distinct => true)
       end
 
       raise InvalidPage.new(@current_page) if @current_page < 1
