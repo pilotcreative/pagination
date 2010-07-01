@@ -10,3 +10,7 @@ require 'pagination/view_helpers'
 
 # Loads the :paginate view helper
 ActionView::Base.send :include, Pagination::ViewHelpers
+
+if defined?(ActionController::Base) and ActionController::Base.respond_to? :rescue_responses
+  ActionController::Base.rescue_responses['Pagination::InvalidPage'] = :not_found
+end

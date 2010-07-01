@@ -1,5 +1,5 @@
 module Pagination
-  class InvalidPage < ActiveRecord::RecordNotFound
+  class InvalidPage < ArgumentError
     def initialize(page, max = 1)
       super "#{page} must be greater than 0" if page < 1
       super "#{page} must be less than #{max}" if page >= 1
@@ -19,7 +19,7 @@ module Pagination
       else
         @current_page = options[:current_page].to_i
         @per_page = options[:per_page].to_i
-        self.total_entries ||= @collection.count(:id, :distinct => true)
+        self.total_entries ||= @collection.count(:distinct => true, :select => :id)
       end
 
       raise InvalidPage.new(@current_page) if @current_page < 1

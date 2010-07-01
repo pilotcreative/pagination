@@ -3,6 +3,11 @@ require File.dirname(__FILE__) + '/lib/view_test_process'
 
 class ViewHelpersTest < Pagination::ViewTestCase
   context "paginate method" do
+    setup do
+      Article.destroy_all
+      5.times {|i| Article.create!(:id => i, :user => User.create)}
+      @collection = Article.all
+    end
 
     should "return full output" do
       paginate({:page => 1})
@@ -123,7 +128,7 @@ class ViewHelpersTest < Pagination::ViewTestCase
 
       # magic ID
       paginate({}, :id => true) do |div|
-        assert_equal 'fixnums_pagination', div.first['id']
+        assert_equal 'articles_pagination', div.first['id']
       end
 
       # explicit ID

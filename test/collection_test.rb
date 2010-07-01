@@ -5,7 +5,9 @@ require File.dirname(__FILE__) + '/../lib/pagination/enumerable'
 class CollectionTest < Test::Unit::TestCase
   context "collection test" do
     setup do
-      @collection = ('a'..'e').to_a
+      Article.destroy_all
+      5.times {|i| Article.create!(:id => i, :user => User.create)}
+      @collection = Article.all
     end
 
     should "return elements from specific range" do
@@ -13,9 +15,9 @@ class CollectionTest < Test::Unit::TestCase
       # limit = per_page
       # offset = (current_page - 1) * limit
       [
-        { :offset => 0,  :limit => 3,  :expected => %w( a b c ) },
-        { :offset => 3,  :limit => 3,  :expected => %w( d e ) },
-        { :offset => 0,  :limit => 5,  :expected => %w( a b c d e ) },
+        { :offset => 0,  :limit => 3,  :expected => [@collection[0],@collection[1], @collection[2]] },
+        { :offset => 3,  :limit => 3,  :expected => [@collection[3],@collection[4]] },
+        { :offset => 0,  :limit => 5,  :expected => [@collection[0],@collection[1], @collection[2], @collection[3], @collection[4]] },
         { :offset => 6,  :limit => 3,  :expected => [] },
       ].
       each do |conditions|
@@ -26,7 +28,6 @@ class CollectionTest < Test::Unit::TestCase
 
     context "init pagination collection" do
       setup do
-        @collection = [1,2,3,4,5]
         @paginated_collection = paginate_collection(@collection)
       end
 
@@ -55,6 +56,10 @@ class CollectionTest < Test::Unit::TestCase
 
       should "rise an error ArgumentError" do
         assert_raise(ArgumentError) { paginate_collection(@collection, 2, -2) }
+      end
+
+      should "test_rescue_response_hook_presence" do
+        assert_equal :not_found, ActionController::Base.rescue_responses['Pagination::InvalidPage']
       end
     end
 

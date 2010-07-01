@@ -43,9 +43,12 @@ class Pagination::ViewTestCase < Test::Unit::TestCase
 
     def paginate(collection = {}, options = {}, &block)
 
+      Article.destroy_all
+      11.times {|i| Article.create!(:id => i, :user => User.create)}
+
       if collection.instance_of? Hash
         @request.params :page => collection[:page] || 1
-        collection = [1,2,3,4,5,6,7,8,9,10,11]
+        collection = Article.all
       end
       options = {:per_page => 4, :controls => :top}.merge(options)
 
