@@ -57,10 +57,6 @@ class CollectionTest < Test::Unit::TestCase
       should "rise an error ArgumentError" do
         assert_raise(ArgumentError) { paginate_collection(@collection, 2, -2) }
       end
-
-      should "test_rescue_response_hook_presence" do
-        assert_equal :not_found, ActionController::Base.rescue_responses['Pagination::InvalidPage']
-      end
     end
 
     context "collection is empty" do
