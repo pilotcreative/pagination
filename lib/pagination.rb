@@ -20,5 +20,8 @@ ActionController::Base.send :include, RescueWithHelper
 ActionController::Base.send(:rescue_from, Pagination::InvalidPage, :with => :not_found)
 
 def not_found
-   render_optional_error_file 404
+  # Make sure '304 Not Modified' isn't called
+  if stale?(:etag => "invalid_page", :last_modified => DateTime.now.utc)
+    render_optional_error_file 404
+  end
 end
