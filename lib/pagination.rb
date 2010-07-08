@@ -20,5 +20,5 @@ ActionController::Base.send :include, RescueWithHelper
 ActionController::Base.send(:rescue_from, Pagination::InvalidPage, :with => :not_found)
 
 def not_found
-   render_optional_error_file 404
+   render :file => 'public/404.html', :status => :not_found
 end
