@@ -29,7 +29,8 @@ module Pagination
     end
 
     def offset
-      offset = (current_page-1)*limit
+      current = current_page <= 0 ? 1 : current_page
+      (current-1)*limit
     end
 
   protected
