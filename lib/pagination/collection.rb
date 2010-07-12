@@ -5,10 +5,11 @@ module Pagination
     def initialize(options = {})
       @collection = options[:collection]
 
-      if (already_paginated = ([:current_page, :per_page, :total_entries].all? { |m| @collection.respond_to?(m) }))
+      if (already_paginated = ([:current_page, :per_page, :total_entries, :total_pages].all? { |m| @collection.respond_to?(m) }))
         @current_page = @collection.current_page
         @per_page = @collection.per_page
-        self.total_entries ||= @collection.total_entries
+        @total_entries = @collection.total_entries
+        @total_pages = @collection.total_pages
       else
         @current_page = options[:current_page].to_i
         @per_page = options[:per_page].to_i
