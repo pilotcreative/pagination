@@ -1,4 +1,4 @@
-gem 'actionpack', '2.3.5'
+gem 'actionpack', '2.3.8'
 require 'action_controller'
 require 'action_controller/test_process'
 
