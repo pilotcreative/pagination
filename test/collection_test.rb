@@ -49,11 +49,6 @@ class CollectionTest < Test::Unit::TestCase
         assert_equal 4, pag_array.count
       end
 
-      should "rise an error InvalidPage" do
-        assert_raise(Pagination::InvalidPage) { paginate_collection(@collection, -2, 2) }
-        assert_raise(Pagination::InvalidPage) { paginate_collection(@collection, 1000, 2) }
-      end
-
       should "rise an error ArgumentError" do
         assert_raise(ArgumentError) { paginate_collection(@collection, 2, -2) }
       end

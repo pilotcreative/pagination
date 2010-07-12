@@ -1,11 +1,4 @@
 module Pagination
-  class InvalidPage < ArgumentError
-    def initialize(page, max = 1)
-      super "#{page} must be greater than 0" if page < 1
-      super "#{page} must be less than #{max}" if page >= 1
-    end
-  end
-
   class Collection < Array
     attr_reader :current_page, :per_page, :total_entries, :total_pages
 
@@ -22,12 +15,9 @@ module Pagination
         self.total_entries ||= @collection.empty? ? 0 : @collection.count(:id , :distinct => true)
       end
 
-      raise InvalidPage.new(@current_page) if @current_page < 1
       raise ArgumentError, "`per_page` setting cannot be less than 1 (#{@per_page} given)" if @per_page < 1
 
       replace(already_paginated ? @collection : @collection.paginate(:limit => limit, :offset => offset))
-
-      raise InvalidPage.new(current_page, total_pages) if current_page > total_pages
     end
 
     def previous_page
