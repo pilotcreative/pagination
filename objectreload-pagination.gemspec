@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Mateusz Drozdzynski"]
-  s.date = %q{2010-07-14}
+  s.date = %q{2010-07-22}
   s.email = %q{gems@objectreload.com}
   s.extra_rdoc_files = [
     "LICENSE",
@@ -23,14 +23,13 @@ Gem::Specification.new do |s|
      "Rakefile",
      "VERSION",
      "init.rb",
-     "lib/active_record/base_extensions.rb",
-     "lib/active_record/scope_extensions.rb",
      "lib/pagination.rb",
      "lib/pagination/collection.rb",
      "lib/pagination/enumerable.rb",
-     "lib/pagination/named_scope.rb",
+     "lib/pagination/relation.rb",
      "lib/pagination/version.rb",
      "lib/pagination/view_helpers.rb",
+     "objectreload-pagination.gemspec",
      "test/active_record_extentions_test.rb",
      "test/collection_test.rb",
      "test/lib/view_test_process.rb",
