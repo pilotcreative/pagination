@@ -101,16 +101,7 @@ module Pagination
 
         top = [:top, :both].include?(options[:controls]) ? pagination : ""
         bottom = [:bottom, :both].include?(options[:controls]) ? pagination : ""
-        unless ActionView::Base.respond_to? :erb_variable
-          concat top
-          yield collection
-          unless bottom.empty?
-            concat bottom
-          end
-        else
-          content = top + capture(&block) + bottom
-          concat(content, block.binding)
-        end
+        return top + capture { yield collection } + bottom
       else
         collection
       end

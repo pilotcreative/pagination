@@ -13,7 +13,7 @@ module Pagination
       else
         @current_page = options[:current_page].to_i
         @per_page = options[:per_page].to_i
-        self.total_entries ||= @collection.empty? ? 0 : @collection.count(:id , :distinct => true)
+        self.total_entries ||= @collection.empty? ? 0 : (@collection.respond_to?(:_count) ? @collection._count : @collection.count)
       end
 
       raise ArgumentError, "`per_page` setting cannot be less than 1 (#{@per_page} given)" if @per_page < 1
