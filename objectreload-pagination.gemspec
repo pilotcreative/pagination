@@ -2,7 +2,7 @@
 require File.expand_path("../lib/pagination/version", __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = "pagination"
+  s.name        = "objectreload-pagination"
   s.version     = Pagination::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Mateusz Drożdżyński"]
